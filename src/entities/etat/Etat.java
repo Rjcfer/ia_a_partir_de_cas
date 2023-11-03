@@ -1,10 +1,6 @@
-package entities;
+package entities.etat;
 
-public class Etat {
-
-	public Etat() {
-		// voir pour auto incremnet 
-	}
+public abstract class Etat {
 
 	private int id_etat;
 

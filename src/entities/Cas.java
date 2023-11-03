@@ -1,5 +1,7 @@
 package entities;
 
+import entities.etat.Etat;
+
 public class Cas {
 
 	private int id;
