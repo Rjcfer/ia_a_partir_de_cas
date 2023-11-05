@@ -13,7 +13,7 @@ import entities.Triplet;
 public class DataHandler {
 	private List<Triplet> cases = new ArrayList<>();
 
-	private void readfile() {
+	private List<Triplet> getDataFromFile() {
 		File file = new File("reglesCN.txt");
 
 		try {
@@ -48,18 +48,21 @@ public class DataHandler {
 						cases.add(t);
 					}
 				}
+
 			}
 			// dont need bufferedReader anymore so close it 
 			br.close();
+
 		} catch (IOException e) {
+			System.err.println(e);
 		}
+		return cases;
 	}
 
 	public static void main(String[] args) {
 		DataHandler dataHandler = new DataHandler();
-		dataHandler.readfile();
 
-		for (Triplet t : dataHandler.cases) {
+		for (Triplet t : dataHandler.getDataFromFile()) {
 			System.out.println(t);
 		}
 	}
