@@ -3,7 +3,7 @@ package entities;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Triplet {
-	private AtomicInteger counter = new AtomicInteger(0);
+	private static AtomicInteger counter = new AtomicInteger(0);
 	private int id_triplet;
 	private String er;
 	private String ec;

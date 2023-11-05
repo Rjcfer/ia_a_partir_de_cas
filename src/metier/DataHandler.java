@@ -60,7 +60,6 @@ public class DataHandler {
 
 	public static void main(String[] args) {
 		DataHandler dataHandler = new DataHandler();
-
 		for (Triplet t : dataHandler.getDataFromFile()) {
 			System.out.println(t);
 		}
