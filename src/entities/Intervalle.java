@@ -2,20 +2,10 @@ package entities;
 
 public class Intervalle {
 
-	private int id_intervalle;
 	private int bi;
 	private int bs;
 
 	public Intervalle() {
-
-	}
-
-	public int getId_intervalle() {
-		return id_intervalle;
-	}
-
-	public void setId_intervalle(int id_intervalle) {
-		this.id_intervalle = id_intervalle;
 	}
 
 	public int getBi() {
@@ -36,7 +26,7 @@ public class Intervalle {
 
 	@Override
 	public String toString() {
-		return "Intervalle [id_intervalle=" + id_intervalle + ", bi=" + bi + ", bs=" + bs + "]";
+		return "Intervalle [bi=" + bi + ", bs=" + bs + "]";
 	}
 
 }
