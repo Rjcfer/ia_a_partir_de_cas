@@ -1,23 +1,27 @@
 package entities;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import entities.etat.Etat;
 
 public class Cas {
 
 	private int id;
-	private Triplet p;
+	private static AtomicInteger counter = new AtomicInteger(0);
+	private List<Triplet> p = new ArrayList<>();
 	private Etat s;
 
 	public Cas() {
-
+		id = counter.incrementAndGet();
 	}
 
-	public Triplet getP() {
+	public List<Triplet> getP() {
 		return p;
 	}
 
-	public void setP(Triplet p) {
+	public void setP(List<Triplet> p) {
 		this.p = p;
 	}
 

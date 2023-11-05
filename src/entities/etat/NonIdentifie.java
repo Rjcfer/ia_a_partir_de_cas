@@ -2,8 +2,18 @@ package entities.etat;
 
 public class NonIdentifie extends Etat {
 
-	public NonIdentifie() {
-		super();
+	private static NonIdentifie ni = null;
+
+	private NonIdentifie() {
+		super("non identifie");
+	}
+
+	// singleton no need to create multiple instances a NonIdentifie will allways be non idenfie
+	public static NonIdentifie getNormalInstance() {
+		if (ni == null) {
+			ni = new NonIdentifie();
+		}
+		return ni;
 	}
 
 }

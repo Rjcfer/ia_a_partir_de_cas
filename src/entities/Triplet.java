@@ -1,13 +1,16 @@
 package entities;
 
-public class Triplet {
+import java.util.concurrent.atomic.AtomicInteger;
 
+public class Triplet {
+	private static AtomicInteger counter = new AtomicInteger(0);
 	private int id_triplet;
 	private String er;
 	private String ec;
 	private Intervalle intevalle;
 
 	public Triplet() {
+		id_triplet = counter.incrementAndGet();
 	}
 
 	public int getId_triplet() {
