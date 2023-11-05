@@ -4,38 +4,43 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
-@SuppressWarnings("unused")
 public class DataHandler {
-
-	public DataHandler() {
-
-	}
+	private List<String> cases = new ArrayList<>();
 
 	private void readfile() {
-	
-		
-		 // Data file path is passed as parameter
-        File file = new File("src\\metier\\data.txt");
+		File file = new File("reglesCN.txt");
 
-        try {   BufferedReader br
-            = new BufferedReader(new FileReader(file));
-        String st;
-     
-			while ((st = br.readLine()) != null)
-			    System.out.println(st);
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String line;
+
+			while ((line = br.readLine()) != null) {
+				// verify empty line
+				if (!line.trim().isEmpty()) {
+					// split by separator
+					String[] elements = line.split("\\*");
+
+					for (String element : elements) {
+						cases.add(element);
+					}
+				}
+			}
+			// dont need br anymore so close it 
+			br.close();
 		} catch (IOException e) {
-			System.out.println(e);
 		}
 	}
-	
+
 	public static void main(String[] args) {
-		new DataHandler().readfile();
+		DataHandler dataHandler = new DataHandler();
+		dataHandler.readfile();
 
+		for (String element : dataHandler.cases) {
+			System.out.println(element);
+		}
 	}
-	
-
 
 }
