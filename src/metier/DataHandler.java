@@ -13,9 +13,9 @@ import entities.Triplet;
 import entities.etat.Normal;
 
 public class DataHandler {
-	private List<Cas> cases = new ArrayList<>();
+	private static List<Cas> cases = new ArrayList<>();
 
-	public List<Cas> getDataFromFile() {
+	public static List<Cas> getDataFromFile() {
 		File file = new File("reglesCN.txt");
 
 		try {
@@ -66,13 +66,6 @@ public class DataHandler {
 			System.err.println(e);
 		}
 		return cases;
-	}
-
-	public static void main(String[] args) {
-		DataHandler dataHandler = new DataHandler();
-		for (Cas c : dataHandler.getDataFromFile()) {
-			System.out.println(c);
-		}
 	}
 
 }
