@@ -7,13 +7,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import entities.Cas;
 import entities.Intervalle;
 import entities.Triplet;
+import entities.etat.Normal;
 
 public class DataHandler {
-	private List<Triplet> cases = new ArrayList<>();
+	private List<Cas> cases = new ArrayList<>();
 
-	public List<Triplet> getDataFromFile() {
+	public List<Cas> getDataFromFile() {
 		File file = new File("reglesCN.txt");
 
 		try {
@@ -21,8 +23,10 @@ public class DataHandler {
 			String line;
 
 			while ((line = br.readLine()) != null) {
-				// verify empty line
+
+				// verify empty line and add all triplet by case 
 				if (!line.trim().isEmpty()) {
+					Cas cas = new Cas();
 					// split by separator
 					String[] elements = line.split("\\*");
 					for (String element : elements) {
@@ -45,10 +49,15 @@ public class DataHandler {
 							// add because triplet 
 							t.setIntevalle(i);
 						}
-						cases.add(t);
+						// normal cases 
+						cas.setS(new Normal());
+						// add triplet to list
+						cas.getP().add(t);
 					}
+					cases.add(cas);
 				}
 			}
+
 			// dont need bufferedReader anymore so close it 
 			br.close();
 
@@ -60,8 +69,8 @@ public class DataHandler {
 
 	public static void main(String[] args) {
 		DataHandler dataHandler = new DataHandler();
-		for (Triplet t : dataHandler.getDataFromFile()) {
-			System.out.println(t);
+		for (Cas c : dataHandler.getDataFromFile()) {
+			System.out.println(c);
 		}
 	}
 
