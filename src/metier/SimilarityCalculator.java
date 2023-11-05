@@ -9,7 +9,7 @@ public class SimilarityCalculator {
 	List<Cas> normalCases;
 
 	public SimilarityCalculator() {
-		//load data when class starts maybe singleton after ?
+		//load data when class starts maybe singleton after ? to load Data once ?
 		loadData();
 
 	}
