@@ -50,7 +50,8 @@ public class DataHandler {
 							t.setIntevalle(i);
 						}
 						// normal cases 
-						cas.setS(new Normal());
+						cas.setS(Normal.getNormalInstance());
+
 						// add triplet to list
 						cas.getP().add(t);
 					}

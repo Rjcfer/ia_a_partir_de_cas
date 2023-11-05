@@ -5,7 +5,7 @@ public class Defaillant extends Etat {
 	String description;
 
 	public Defaillant(String description, String localisation) {
-		super();
+		super("defaillant");
 		this.description = description;
 		this.localisation = localisation;
 	}
@@ -26,10 +26,9 @@ public class Defaillant extends Etat {
 		this.description = description;
 	}
 
-	
+	@Override
 	public String toString() {
 		return "Defaillant [localisation=" + localisation + ", description=" + description + "]";
 	}
-	
 
 }
