@@ -46,18 +46,21 @@ public class DataHandler {
 							t.setEc(tripletElements[1].trim().substring(0, tripletElements[1].trim().length() - 1));
 
 							String intervalleElement = tripletElements[2];
-							if (!intervalleElement.trim().equals("nct)")) {
-								// when intervalle exists 
-								Intervalle i = new Intervalle();
 
+							// when intervalle exists 
+							Intervalle i = new Intervalle();
+							if (!intervalleElement.trim().equals("nct)")) {
 								// remove sapces and '['from the start  
 								i.setBi(Integer.parseInt(intervalleElement.trim().substring(1)));
 								// remove '])'
 								i.setBs(Integer.parseInt(tripletElements[3].trim().substring(0, tripletElements[3].trim().length() - 2)));
-
-								// add because triplet 
-								t.setIntevalle(i);
+							} else {
+								i.setBi(0);
+								i.setBs(999999999);
 							}
+							// add because triplet 
+							t.setIntevalle(i);
+
 							// normal cases 
 							cas.setS(Normal.getNormalInstance());
 
