@@ -43,7 +43,7 @@ public class DataHandler {
 							String[] tripletElements = element.split(",");
 							// remove sapces and '('from the start  and  ')' from the end 
 							t.setEr(tripletElements[0].trim().substring(1));
-							t.setEc(tripletElements[1].trim().substring(0, tripletElements[1].trim().length() - 1));
+							t.setEc(tripletElements[1].trim().substring(0, tripletElements[1].trim().length()));
 
 							String intervalleElement = tripletElements[2];
 

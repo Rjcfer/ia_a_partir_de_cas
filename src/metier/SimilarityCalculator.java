@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 import entities.Cas;
 import entities.Intervalle;
 import entities.Triplet;
+import entities.etat.Defaillant;
 import entities.etat.Etat;
 import entities.etat.NonIdentifie;
+import entities.etat.Normal;
 
 public class SimilarityCalculator {
 
@@ -40,7 +42,6 @@ public class SimilarityCalculator {
 		if (y > a && x > y && x < a)
 			return 0;
 		else {
-
 			int pos1 = pos(x, i2);
 			int pos2 = pos(y, i2);
 			return Math.min(pos1, pos2);
@@ -58,14 +59,6 @@ public class SimilarityCalculator {
 	}
 
 	private double dt(Triplet t1, Triplet t2, double dateMax) {
-		t1.getIntevalle();
-
-		System.out.println("1 " + dev(t1.getEc(), t2.getEc())); //
-		System.out.println("2 " + dev(t1.getEr(), t2.getEr()));
-		System.out.println("3 " + ipos(t1.getIntevalle(), t2.getIntevalle()));
-		System.out.println("4 " + t1.getIntevalle());
-		System.out.println("5 " + t2.getIntevalle());
-
 		return dev(t1.getEc(), t2.getEc()) //
 				+ dev(t1.getEr(), t2.getEr())//
 				+ (ipos(t1.getIntevalle(), t2.getIntevalle())//
@@ -74,28 +67,27 @@ public class SimilarityCalculator {
 	}
 
 	public Cas calculate(Cas casToTest) {
-		Etat etat = null;
+		Etat etat = NonIdentifie.getNonIdentifieInstance();
 		Cas mustSimiliarCas = null;
 
+		// get all cases with same triplets size 
 		List<Cas> casWithSameSize = normalCases.stream().filter(c -> {
 			return c.getP().size() == casToTest.getP().size();
 		}).collect(Collectors.toList());
 
-		for (Cas cas : casWithSameSize) {
-			System.out.println(cas.getP().size() == casToTest.getP().size());
-		}
-		if (casWithSameSize.size() == 0)
-			etat = NonIdentifie.getNonIdentifieInstance();
-		else {
-			double resultat = 1;
+		double resultat = 1;
+		if (!(casWithSameSize.size() == 0)) {
 			int index = 0;
-			while (resultat != 0 || casWithSameSize.size() > index) {
+
+			while (resultat != 0 && index < casWithSameSize.size()) {
 				Cas cas = casWithSameSize.get(index);
+
 				double tempResult = 0;
-				for (Triplet t : cas.getP()) {
-					//tempResult += dt(t, cas.getP().get(casToTest.getP().indexOf(t)), 100);
+				for (int i = 0; i < cas.getP().size(); i++) {
+					Triplet t = cas.getP().get(i);
+					tempResult += dt(t, casToTest.getP().get(i), 100);
 				}
-				tempResult = tempResult / 3 * cas.getP().size();
+				tempResult = tempResult / (3 * cas.getP().size());
 
 				if (tempResult < resultat) {
 					mustSimiliarCas = cas;
@@ -104,48 +96,56 @@ public class SimilarityCalculator {
 
 				index++;
 			}
-		}
-		casToTest.setS(etat);
 
-		//system.out.println(mustSimiliarCas);
+			if (resultat == 0)
+				etat = Normal.getNormalInstance();
+			else if (resultat < 1) {
+				etat = new Defaillant(" defaillant description", "localisation");
+			}
+
+		}
+		System.out.println("resultat : " + resultat);
+		casToTest.setS(etat);
 		return mustSimiliarCas;
 	}
 
 	public void testCase() {
-		//(In, RE_but_ext, nct) * (In, RE_XGLISS, nct) * (RE_but_ext, FE_x_conv, [274000, 309000]) * (RE_XGLISS, FE_x_conv, [274000, 309000])
 
 		Cas pn = new Cas();
 		Triplet t = new Triplet();
 		Intervalle i = new Intervalle();
-		// first case
+
+		//(In, RE_but_ext, nct) * 
+		t = new Triplet();
+		i = new Intervalle();
 		t.setEr("In");
 		t.setEc("RE_but_ext");
 		i.setBi(0);
-		i.setBs(999999999);
+		i.setBs(999999);
 		t.setIntevalle(i);
 		pn.getP().add(t);
 
-		// second case
+		//(In, RE_XGLISS, nct) *
 		t = new Triplet();
 		i = new Intervalle();
 		t.setEr("In");
 		t.setEc("RE_XGLISS");
 		i.setBi(0);
-		i.setBs(999999999);
+		i.setBs(999999);
 		t.setIntevalle(i);
 		pn.getP().add(t);
 
-		// third case
+		//(RE_but_ext, FE_x_conv, [274000, 309000]) * 
 		t = new Triplet();
 		i = new Intervalle();
 		t.setEr("RE_but_ext");
 		t.setEc("FE_x_conv");
-		i.setBi(274000);
-		i.setBs(309000);
+		i.setBi(264000);
+		i.setBs(319000);
 		t.setIntevalle(i);
 		pn.getP().add(t);
 
-		// four case
+		//(RE_XGLISS, FE_x_conv, [274000, 309000])
 		t = new Triplet();
 		i = new Intervalle();
 		t.setEr("RE_XGLISS");
@@ -156,15 +156,19 @@ public class SimilarityCalculator {
 		pn.getP().add(t);
 
 		Cas Result = calculate(pn);
-		System.out.println(Result);
+
+		if (Result == null) {
+			System.out.println(NonIdentifie.getNonIdentifieInstance());
+		} else
+			System.out.println(Result.getS().getName());
 	}
 
 	public static void main(String[] args) {
 		SimilarityCalculator s = new SimilarityCalculator();
-		s.testCase();
-		/*for (Cas c : s.normalCases) {
-			System.out.println(c);
-		}*/
+		s.normalCases.forEach((c) -> {
+			System.out.println(s.calculate(c).getS().getName());
+		});
+		//s.testCase();
 	}
 
 }
