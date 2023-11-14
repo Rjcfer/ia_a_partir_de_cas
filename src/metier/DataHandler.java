@@ -11,22 +11,26 @@ import entities.Cas;
 import entities.Intervalle;
 import entities.Triplet;
 import entities.etat.Normal;
+import logger.Print;
 
 public class DataHandler {
 
 	private static List<Cas> cases = new ArrayList<>();
 
 	private static DataHandler dh = null;
+	private static String pathCalled = "";
 
 	private DataHandler() {
 
 	}
 
-	public static List<Cas> getDataFromFile() {
-		// only load data once 
-		if (cases.size() == 0) {
-			File file = new File("reglesCN.txt");
+	public static List<Cas> getDataFromFile(String path) {
 
+		// only load data once 
+		if (cases.size() == 0 || !pathCalled.equals(path)) {
+			File file = new File(path);
+			Print.Green(path);
+			pathCalled = path;
 			try {
 				BufferedReader br = new BufferedReader(new FileReader(file));
 				String line;
@@ -43,21 +47,24 @@ public class DataHandler {
 							String[] tripletElements = element.split(",");
 							// remove sapces and '('from the start  and  ')' from the end 
 							t.setEr(tripletElements[0].trim().substring(1));
-							t.setEc(tripletElements[1].trim().substring(0, tripletElements[1].trim().length() - 1));
+							t.setEc(tripletElements[1].trim().substring(0, tripletElements[1].trim().length()));
 
 							String intervalleElement = tripletElements[2];
-							if (!intervalleElement.trim().equals("nct)")) {
-								// when intervalle exists 
-								Intervalle i = new Intervalle();
 
+							// when intervalle exists 
+							Intervalle i = new Intervalle();
+							if (!intervalleElement.trim().equals("nct)")) {
 								// remove sapces and '['from the start  
 								i.setBi(Integer.parseInt(intervalleElement.trim().substring(1)));
 								// remove '])'
 								i.setBs(Integer.parseInt(tripletElements[3].trim().substring(0, tripletElements[3].trim().length() - 2)));
-
-								// add because triplet 
-								t.setIntevalle(i);
+							} else {
+								i.setBi(0);
+								i.setBs(999999999);
 							}
+							// add because triplet 
+							t.setIntevalle(i);
+
 							// normal cases 
 							cas.setS(Normal.getNormalInstance());
 

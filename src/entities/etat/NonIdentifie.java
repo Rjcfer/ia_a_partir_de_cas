@@ -9,7 +9,7 @@ public class NonIdentifie extends Etat {
 	}
 
 	// singleton no need to create multiple instances a NonIdentifie will allways be non idenfie
-	public static NonIdentifie getNormalInstance() {
+	public static NonIdentifie getNonIdentifieInstance() {
 		if (ni == null) {
 			ni = new NonIdentifie();
 		}
