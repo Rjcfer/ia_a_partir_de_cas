@@ -10,6 +10,7 @@ import entities.etat.Defaillant;
 import entities.etat.Etat;
 import entities.etat.NonIdentifie;
 import entities.etat.Normal;
+import logger.Print;
 
 public class SimilarityCalculator {
 
@@ -165,10 +166,16 @@ public class SimilarityCalculator {
 
 	public static void main(String[] args) {
 		SimilarityCalculator s = new SimilarityCalculator();
+
 		List<Cas> defaultCases = DataHandler.getDataFromFile("fakeData.txt");
+		//List<Cas> defaultCases = DataHandler.getDataFromFile("reglesCN.txt");
 		defaultCases.forEach((c) -> {
 			System.out.println(s.calculate(c).getS().getName());
 		});
+		// probleme les deux variables ont la meme reference TODO
+		Print.Red(defaultCases.size());
+		Print.Red(s.normalCases.size());
+
 		//s.testCase();
 	}
 

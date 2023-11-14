@@ -11,22 +11,26 @@ import entities.Cas;
 import entities.Intervalle;
 import entities.Triplet;
 import entities.etat.Normal;
+import logger.Print;
 
 public class DataHandler {
 
 	private static List<Cas> cases = new ArrayList<>();
 
 	private static DataHandler dh = null;
+	private static String pathCalled = "";
 
 	private DataHandler() {
 
 	}
 
 	public static List<Cas> getDataFromFile(String path) {
-		// only load data once 
-		if (cases.size() == 0) {
-			File file = new File(path);
 
+		// only load data once 
+		if (cases.size() == 0 || !pathCalled.equals(path)) {
+			File file = new File(path);
+			Print.Green(path);
+			pathCalled = path;
 			try {
 				BufferedReader br = new BufferedReader(new FileReader(file));
 				String line;
