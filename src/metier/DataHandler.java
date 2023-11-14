@@ -22,10 +22,10 @@ public class DataHandler {
 
 	}
 
-	public static List<Cas> getDataFromFile() {
+	public static List<Cas> getDataFromFile(String path) {
 		// only load data once 
 		if (cases.size() == 0) {
-			File file = new File("reglesCN.txt");
+			File file = new File(path);
 
 			try {
 				BufferedReader br = new BufferedReader(new FileReader(file));

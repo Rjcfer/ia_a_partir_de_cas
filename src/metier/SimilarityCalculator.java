@@ -16,13 +16,13 @@ public class SimilarityCalculator {
 	List<Cas> normalCases;
 
 	public SimilarityCalculator() {
-		//load data when class starts maybe singleton after ? to load Data once ?
+		//load data when class starts
 		loadData();
 
 	}
 
 	private void loadData() {
-		normalCases = DataHandler.getDataFromFile();
+		normalCases = DataHandler.getDataFromFile("reglesCN.txt");
 	}
 
 	private int dev(String s1, String s2) {
@@ -165,7 +165,8 @@ public class SimilarityCalculator {
 
 	public static void main(String[] args) {
 		SimilarityCalculator s = new SimilarityCalculator();
-		s.normalCases.forEach((c) -> {
+		List<Cas> defaultCases = DataHandler.getDataFromFile("fakeData.txt");
+		defaultCases.forEach((c) -> {
 			System.out.println(s.calculate(c).getS().getName());
 		});
 		//s.testCase();
