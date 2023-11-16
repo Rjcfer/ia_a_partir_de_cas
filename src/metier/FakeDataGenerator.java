@@ -17,28 +17,44 @@ public class FakeDataGenerator {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
 
 			for (Cas originalCas : originalCases) {
-				StringBuilder line = new StringBuilder();
-
 				// Write original case data
+				StringBuilder normalLine = new StringBuilder();
 				for (Triplet triplet : originalCas.getP()) {
-					line.append("(").append(triplet.getEr()).append(", ").append(triplet.getEc()).append(", [").append(triplet.getIntevalle().getBi()).append(", ").append(triplet.getIntevalle().getBs()).append("]) * ");
+					normalLine.append("(").append(triplet.getEr()).append(", ").append(triplet.getEc()).append(",");
+					if (triplet.getIntevalle().getBi() == 0 && triplet.getIntevalle().getBs() == 999999999) {
+						normalLine.append("nct)");
+					} else {
+						normalLine.append("[").append(triplet.getIntevalle().getBi()).append(", ").append(triplet.getIntevalle().getBs()).append("]) ");
+					}
+					normalLine.append("*");
 				}
-
-				// Remove  " * " from the end of line 
-				if (line.length() > 3) {
-					line.setLength(line.length() - 3);
+				// Remove " * " from the end of the line
+				if (normalLine.length() > 3) {
+					normalLine.setLength(normalLine.length() - 3);
 				}
-
-				writer.write(line.toString());
+				writer.write(normalLine.toString());
 				writer.newLine();
 
-				// Allow different scenarios
-				for (int i = 0; i < 3; i++) {
-					Triplet fakeTriplet = generateFakeTriplet(false, i);
-					String fakeLine = "(" + fakeTriplet.getEr() + ", " + fakeTriplet.getEc() + ", [" + fakeTriplet.getIntevalle().getBi() + ", " + fakeTriplet.getIntevalle().getBs() + "])";
-					writer.write(fakeLine);
-					writer.newLine();
+				// Generate and write faulty case data
+				StringBuilder faultyLine = new StringBuilder();
+				for (int i = 0; i < originalCas.getP().size(); i++) {
+					Triplet normalTriplet = originalCas.getP().get(i);
+					Triplet faultyTriplet = generateFaultyTriplet(originalCas.getP(), i);
+
+					faultyLine.append("(").append(faultyTriplet.getEr()).append(", ").append(faultyTriplet.getEc()).append(",");
+					if (faultyTriplet.getIntevalle().getBi() == 0 && faultyTriplet.getIntevalle().getBs() == 999999999) {
+						faultyLine.append("nct)");
+					} else {
+						faultyLine.append("[").append(faultyTriplet.getIntevalle().getBi()).append(", ").append(faultyTriplet.getIntevalle().getBs()).append("]) ");
+					}
+					faultyLine.append("*");
 				}
+				// Remove " * " from the end of the line
+				if (faultyLine.length() > 3) {
+					faultyLine.setLength(faultyLine.length() - 3);
+				}
+				writer.write(faultyLine.toString());
+				writer.newLine();
 			}
 
 			writer.close();
@@ -47,46 +63,20 @@ public class FakeDataGenerator {
 		}
 	}
 
-	private static Triplet generateFakeTriplet(boolean isNormal, int faultyScenario) {
-		Triplet fakeTriplet = new Triplet();
-
+	private static Triplet generateFaultyTriplet(List<Triplet> originalTriplets, int faultyIndex) {
+		Triplet faultyTriplet = new Triplet();
 		// Set common values for er, ec
-		fakeTriplet.setEr("In");
-		fakeTriplet.setEc("A");
+		faultyTriplet.setEr("In");
+		faultyTriplet.setEc("S" + originalTriplets.get(faultyIndex).getEc()); // Add "S" prefix
 
 		// Initialize Intervalle object
-		fakeTriplet.setIntevalle(new Intervalle());
+		faultyTriplet.setIntevalle(new Intervalle());
 
-		if (isNormal) {
-			// Set values for normal behavior
-			fakeTriplet.getIntevalle().setBi(0);
-			fakeTriplet.getIntevalle().setBs(999999999);
-		} else {
-			switch (faultyScenario) {
-				case 1:
-					// Scenario 1: absence of B
-					fakeTriplet.getIntevalle().setBi(1); // Adjust as needed
-					fakeTriplet.getIntevalle().setBs(1); // Adjust as needed
-					break;
-				case 2:
-					// Scenario 2: absence of C
-					fakeTriplet.getIntevalle().setBi(1); // Adjust as needed
-					fakeTriplet.getIntevalle().setBs(1); // Adjust as needed
-					break;
-				case 3:
-					// Scenario 3: absence of D
-					fakeTriplet.getIntevalle().setBi(1); // Adjust as needed
-					fakeTriplet.getIntevalle().setBs(1); // Adjust as needed
-					break;
-				// Add more scenarios as needed
-				default:
-					// Default: absence of B
-					fakeTriplet.getIntevalle().setBi(1); // Adjust as needed
-					fakeTriplet.getIntevalle().setBs(1); // Adjust as needed
-					break;
-			}
-		}
-		return fakeTriplet;
+		// Copy values from the original triplet
+		faultyTriplet.getIntevalle().setBi(originalTriplets.get(faultyIndex).getIntevalle().getBi());
+		faultyTriplet.getIntevalle().setBs(originalTriplets.get(faultyIndex).getIntevalle().getBs());
+
+		return faultyTriplet;
 	}
 
 	public static void main(String[] args) {
@@ -94,6 +84,5 @@ public class FakeDataGenerator {
 		FakeDataGenerator.generateFakeData(originalCases, "fakeData.txt");
 
 		Print.Green("Done");
-
 	}
 }
