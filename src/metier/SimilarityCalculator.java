@@ -102,11 +102,14 @@ public class SimilarityCalculator {
 				etat = Normal.getNormalInstance();
 			else if (resultat < 1) {
 				etat = new Defaillant(" defaillant description", "localisation");
+			} else {
+				// non identified case
+				mustSimiliarCas = casToTest;
+				etat = NonIdentifie.getNonIdentifieInstance();
 			}
-
+			mustSimiliarCas.setS(etat);
 		}
 		System.out.println("resultat : " + resultat);
-		casToTest.setS(etat);
 		return mustSimiliarCas;
 	}
 
@@ -159,22 +162,24 @@ public class SimilarityCalculator {
 		Cas Result = calculate(pn);
 
 		if (Result == null) {
-			System.out.println(NonIdentifie.getNonIdentifieInstance());
+			Print.Purple(NonIdentifie.getNonIdentifieInstance());
 		} else
-			System.out.println(Result.getS().getName());
+			Print.Purple(Result.getS().getName());
 	}
 
 	public static void main(String[] args) {
 		SimilarityCalculator s = new SimilarityCalculator();
 
-		List<Cas> defaultCases = DataHandler.getDataFromFile("fakeData.txt");
-		//List<Cas> defaultCases = DataHandler.getDataFromFile("reglesCN.txt");
-		defaultCases.forEach((c) -> {
-			System.out.println(s.calculate(c).getS().getName());
-		});
-		// probleme les deux variables ont la meme reference TODO
-		Print.Red(defaultCases.size());
-		Print.Red(s.normalCases.size());
+		List<Cas> defaultCases;
+		// reference to non static method
+		try {
+			defaultCases = DataHandler.getDataFromFile("fakeData.txt");
+			defaultCases.forEach((c) -> {
+				Print.Green(s.calculate(c).getS().getName());
+			});
+		} catch (Exception e) {
+			Print.Error(e);
+		}
 
 		//s.testCase();
 	}
