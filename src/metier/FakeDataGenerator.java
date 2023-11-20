@@ -35,7 +35,9 @@ public class FakeDataGenerator {
 					if (triplet.getIntevalle().getBi() == 0 && triplet.getIntevalle().getBs() == 999999999) {
 						lineCase.append("nct)");
 					} else {
-						lineCase.append("[").append(triplet.getIntevalle().getBi()).append(", ").append(triplet.getIntevalle().getBs()).append("]) ");
+						lineCase.append("[")// regler le soucis pas nct mais le temps d'avant 
+								.append(triplet.getIntevalle().getBi() == 999999999 ? "nct" : triplet.getIntevalle().getBi())//
+								.append(", ").append(triplet.getIntevalle().getBs()).append("]) ");
 					}
 					lineCase.append("*");
 				}
@@ -62,7 +64,6 @@ public class FakeDataGenerator {
 		// get triplet that depends on faulty
 		originalTriplets.stream().filter(t -> {
 			return t.getEr().equals(faultyTriplet.getEc());
-			//triplet.getEr()).append(", ").append(triplet.getEc()
 		}).collect(Collectors.toList()).forEach(t -> {
 			// the triplet that faulty triplet depends on 
 			Triplet dependsTriplet = originalTriplets.stream().filter(td -> {
