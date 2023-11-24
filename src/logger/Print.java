@@ -4,7 +4,7 @@ package logger;
  * Utility class for colored console printing.
  * Supports ANSI color codes for different text colors.
  * 
- * @author Ikaro
+ * @author Ricardo Ferreira
  * @version 2.0
  */
 public class Print {
