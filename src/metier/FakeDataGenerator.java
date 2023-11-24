@@ -19,13 +19,20 @@ public class FakeDataGenerator {
 
 			for (Cas originalCas : originalCases) {
 				boolean faultyTripletGenerated = false;
+				int faultyIndex = 0;
+				// to stock intervalle of original case , to use it in the next non faulty case
+				Intervalle faultyIntervalle = null;
 				// Write original case data
 				StringBuilder lineCase = new StringBuilder();
 				for (int i = 0; i < originalCas.getP().size(); i++) {
 					Triplet triplet = originalCas.getP().get(i);
 
 					// find first triplet that can fail
-					if (triplet.getIntevalle().getBi() != 0 && triplet.getIntevalle().getBs() != 999999999 && !faultyTripletGenerated) {
+					if (!faultyTripletGenerated && triplet.getIntevalle().getBi() != 0 && triplet.getIntevalle().getBs() != 999999999) {
+						faultyIntervalle = originalCas.getP().get(i).getIntevalle();
+						Print.Purple(faultyIntervalle);
+						//store fake index to change intervalle to n+1
+						faultyIndex = i;
 						generateFaultyTriplet(originalCas.getP(), i);
 						// generate only one faulty by case 
 						faultyTripletGenerated = true;
@@ -35,9 +42,14 @@ public class FakeDataGenerator {
 					if (triplet.getIntevalle().getBi() == 0 && triplet.getIntevalle().getBs() == 999999999) {
 						lineCase.append("nct)");
 					} else {
-						lineCase.append("[")// regler le soucis pas nct mais le temps d'avant 
-								.append(triplet.getIntevalle().getBi() == 999999999 ? "nct" : triplet.getIntevalle().getBi())//
-								.append(", ").append(triplet.getIntevalle().getBs()).append("]) ");
+						lineCase.append("[");// regler le soucis pas nct mais le temps d'avant 
+						// if i already generate de faulty case i apply new intervalle to next case 
+						if (faultyTripletGenerated && ((faultyIndex + 1) == i)) {
+							lineCase.append(faultyIntervalle.getBi());//
+						} else {
+							lineCase.append(triplet.getIntevalle().getBi());//
+						}
+						lineCase.append(", ").append(triplet.getIntevalle().getBs()).append("]) ");
 					}
 					lineCase.append("*");
 				}
@@ -60,7 +72,6 @@ public class FakeDataGenerator {
 
 	private static Triplet generateFaultyTriplet(List<Triplet> originalTriplets, int faultyIndex) {
 		Triplet faultyTriplet = originalTriplets.get(faultyIndex);
-
 		// get triplet that depends on faulty
 		originalTriplets.stream().filter(t -> {
 			return t.getEr().equals(faultyTriplet.getEc());

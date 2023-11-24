@@ -10,7 +10,6 @@ import entities.etat.Defaillant;
 import entities.etat.Etat;
 import entities.etat.NonIdentifie;
 import entities.etat.Normal;
-import logger.Print;
 
 public class SimilarityCalculator {
 
@@ -111,77 +110,6 @@ public class SimilarityCalculator {
 		}
 		System.out.println("resultat : " + resultat);
 		return mustSimiliarCas;
-	}
-
-	public void testCase() {
-
-		Cas pn = new Cas();
-		Triplet t = new Triplet();
-		Intervalle i = new Intervalle();
-
-		//(In, RE_but_ext, nct) * 
-		t = new Triplet();
-		i = new Intervalle();
-		t.setEr("In");
-		t.setEc("RE_but_ext");
-		i.setBi(0);
-		i.setBs(999999);
-		t.setIntevalle(i);
-		pn.getP().add(t);
-
-		//(In, RE_XGLISS, nct) *
-		t = new Triplet();
-		i = new Intervalle();
-		t.setEr("In");
-		t.setEc("RE_XGLISS");
-		i.setBi(0);
-		i.setBs(999999);
-		t.setIntevalle(i);
-		pn.getP().add(t);
-
-		//(RE_but_ext, FE_x_conv, [274000, 309000]) * 
-		t = new Triplet();
-		i = new Intervalle();
-		t.setEr("RE_but_ext");
-		t.setEc("FE_x_conv");
-		i.setBi(264000);
-		i.setBs(319000);
-		t.setIntevalle(i);
-		pn.getP().add(t);
-
-		//(RE_XGLISS, FE_x_conv, [274000, 309000])
-		t = new Triplet();
-		i = new Intervalle();
-		t.setEr("RE_XGLISS");
-		t.setEc("FE_x_conv");
-		i.setBi(274000);
-		i.setBs(309000);
-		t.setIntevalle(i);
-		pn.getP().add(t);
-
-		Cas Result = calculate(pn);
-
-		if (Result == null) {
-			Print.Purple(NonIdentifie.getNonIdentifieInstance());
-		} else
-			Print.Purple(Result.getS().getName());
-	}
-
-	public static void main(String[] args) {
-		SimilarityCalculator s = new SimilarityCalculator();
-
-		List<Cas> defaultCases;
-		// reference to non static method
-		try {
-			defaultCases = DataHandler.getDataFromFile("fakeData.txt");
-			defaultCases.forEach((c) -> {
-				Print.Green(s.calculate(c).getS().getName());
-			});
-		} catch (Exception e) {
-			Print.Error(e);
-		}
-
-		//s.testCase();
 	}
 
 }
